@@ -1,0 +1,14 @@
+# Ignore all .mp4 files
+*.mp4
+
+# Ignore all .mp3 files
+*.mp3
+
+# Ignore all .epub files
+*.epub
+
+# Ignore all .jpg files
+*.jpg
+
+# Ignore all .png files
+*.png

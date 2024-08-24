@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'read'; 
+    font-display: block; 
+    src: url('fonts/read.woff2') format('woff2');
+} 
+#TextContent p:last-of-type {
+    font-family: 'read' !important;
+}

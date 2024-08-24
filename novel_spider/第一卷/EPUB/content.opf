@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="id" version="3.0" prefix="rendition: http://www.idpf.org/vocab/rendition/#">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <meta property="dcterms:modified">2024-08-23T23:09:54Z</meta>
+    <meta name="generator" content="Ebook-lib 0.18.1"/>
+    <dc:identifier id="id">d3d363c5-6500-44a0-a07e-1a14bc099941</dc:identifier>
+    <dc:title>第一卷</dc:title>
+    <dc:language>zh</dc:language>
+    <dc:creator id="creator">Author Name</dc:creator>
+  </metadata>
+  <manifest>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="images/image1.jpg" id="image1" media-type="image/jpeg"/>
+    <item href="images/image2.jpg" id="image2" media-type="image/jpeg"/>
+    <item href="images/image3.jpg" id="image3" media-type="image/jpeg"/>
+    <item href="images/image4.jpg" id="image4" media-type="image/jpeg"/>
+    <item href="images/image5.jpg" id="image5" media-type="image/jpeg"/>
+    <item href="images/image6.jpg" id="image6" media-type="image/jpeg"/>
+    <item href="images/image7.jpg" id="image7" media-type="image/jpeg"/>
+    <item href="images/image8.jpg" id="image8" media-type="image/jpeg"/>
+    <item href="images/image9.jpg" id="image9" media-type="image/jpeg"/>
+    <item href="images/image10.jpg" id="image10" media-type="image/jpeg"/>
+    <item href="images/image11.jpg" id="image11" media-type="image/jpeg"/>
+    <item href="images/image12.jpg" id="image12" media-type="image/jpeg"/>
+    <item href="images/image13.jpg" id="image13" media-type="image/jpeg"/>
+    <item href="images/image14.jpg" id="image14" media-type="image/jpeg"/>
+    <item href="images/image15.jpg" id="image15" media-type="image/jpeg"/>
+    <item href="chapter_0.xhtml" id="chapter_0" media-type="application/xhtml+xml"/>
+    <item href="chapter_1.xhtml" id="chapter_1" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="images/image1.jpg" id="image1" media-type="image/jpeg"/>
+    <item href="chapter_2.xhtml" id="chapter_2" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="chapter_3.xhtml" id="chapter_3" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="images/image1.jpg" id="image1" media-type="image/jpeg"/>
+    <item href="chapter_4.xhtml" id="chapter_4" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="chapter_5.xhtml" id="chapter_5" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="chapter_6.xhtml" id="chapter_6" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="images/image1.jpg" id="image1" media-type="image/jpeg"/>
+    <item href="chapter_7.xhtml" id="chapter_7" media-type="application/xhtml+xml"/>
+    <item href="images/image0.jpg" id="image0" media-type="image/jpeg"/>
+    <item href="chapter_8.xhtml" id="chapter_8" media-type="application/xhtml+xml"/>
+    <item href="chapter_9.xhtml" id="chapter_9" media-type="application/xhtml+xml"/>
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+    <item href="nav.xhtml" id="nav" media-type="application/xhtml+xml" properties="nav"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="nav"/>
+    <itemref idref="chapter_9"/>
+  </spine>
+</package>

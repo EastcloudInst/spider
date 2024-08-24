@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta content="id123456" name="dtb:uid"/>
+    <meta content="0" name="dtb:depth"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>My Multi-Chapter Book</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="chap_1">
+      <navLabel>
+        <text>Chapter 1</text>
+      </navLabel>
+      <content src="chapter1.xhtml"/>
+    </navPoint>
+    <navPoint id="chap_2">
+      <navLabel>
+        <text>Chapter 2</text>
+      </navLabel>
+      <content src="chapter2.xhtml"/>
+    </navPoint>
+    <navPoint id="chap_3">
+      <navLabel>
+        <text>Chapter 3</text>
+      </navLabel>
+      <content src="chapter3.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>
