@@ -27,6 +27,28 @@ def decoder(text):
         i = i + 1
     return ''.join(str_list)
 
+def decode_css_content(content):
+    decode_dict_path = 'decode_dict.json'
+    with open(decode_dict_path, 'r', encoding='utf-8') as f:
+        decode_dict = json.load(f)
+    decode_content = ''
+    for c in content:
+        # UTF-8 字节序列
+        utf8_bytes = c.encode('utf-8')
+
+        # 将 UTF-8 字节解码为 Unicode 编码点
+        unicode_char = utf8_bytes.decode('utf-8')
+        unicode_code_point = ord(unicode_char)
+        unicode_key = f"{unicode_code_point:x}"
+        if unicode_key in decode_dict:
+            decode_content = decode_content + decode_dict[unicode_key]
+        elif unicode_code_point >= 57344 and unicode_code_point <= 63743:
+            decode_content = decode_content + '*'
+    print(f"decoded result is: {decode_content}")
+    return decode_content
+        
+
+
 def get_encode_content(content):
     new_data = []
     for c in content:

@@ -7,7 +7,7 @@ import time
 
 # os.chdir('./spider/novel_spider')
 
-from decoder import decoder, get_encode_content
+from decoder import decoder, get_encode_content, decode_css_content
 
 headers = {
     "authority": "www.linovelib.com",
@@ -29,7 +29,7 @@ headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0"
   }
 
-def book_spider(title, chapters):
+def book_spider(title, chapters, prefix='', author='佚名', cover=None):
   base_url = 'https://www.linovelib.com'
   
 
@@ -37,13 +37,18 @@ def book_spider(title, chapters):
   book = epub.EpubBook()
   book.set_title(title)
   book.set_language('zh')
-  book.add_author('Author Name')
+  book.add_author(author)
+
+  if not cover == None:
+    book_cover = get_img(cover)
+    book.set_cover(f'{title}.jpg', book_cover)
 
   idx = 0
   tocs = []
   chapter_list = []
   for chapter in chapters:
-    time.sleep(1)
+    print('翻书等待。。。')
+    time.sleep(3)
     path = chapter['link']
     if not path.startswith('/novel'):
       continue
@@ -57,6 +62,8 @@ def book_spider(title, chapters):
     total_content = ''
     i = 0
     while link:
+      print('翻页等待。。。')
+      time.sleep(1)
       # print('starting, geting response......')s
       response = requests.get(url, headers=headers)
       # print('got it')
@@ -88,6 +95,9 @@ def book_spider(title, chapters):
         if found:
             print("HTML 页面中存在指定的 <style> 内容")
             get_encode_content(paragraphs[-1].text)
+            d = decode_css_content(paragraphs[-1].text)
+            paragraphs[-1].string = d
+
         else:
             print("HTML 页面中不存在指定的 <style> 内容")
 
@@ -143,13 +153,14 @@ def book_spider(title, chapters):
   book.toc = tuple(tocs)
   book.spine = ['nav'] + chapter_list
   print(f'bookspine {book.spine}')
-  # book.add_item(epub.EpubNcx())
+  book.add_item(epub.EpubNcx())
   book.add_item(epub.EpubNav())
 
 
   # 保存成epub文件
-  epub.write_epub(f'{title}.epub', book)
-  print(f'{title} 保存成功。')
+  save_path = os.path.join('.', prefix, f'{prefix}-{title}.epub')
+  epub.write_epub(save_path, book)
+  print(f'{save_path} 保存成功。')
 
 def catalog_parse(url):
   response = requests.get(url, headers=headers)
@@ -158,20 +169,24 @@ def catalog_parse(url):
   soup = BeautifulSoup(html_content, 'html.parser')
 
   # 获取所有的卷信息
-  volumes = soup.find_all('div', class_='volume clearfix')
+  volumes = soup.find_all('div', class_='catalog-volume')
 
   volume_list = []
   # 分别提取每一卷的内容
   for volume in volumes:
       # 提取卷标题
-      volume_title = volume.find('h2', class_='v-line').text
+      volume_title = volume.find('h3').text
       print(f"\n{volume_title}")
       v_dict = {}
       v_dict['title'] = volume_title
       c_list = []
+      volume_cover = None
+      if not volume.find('li', class_='volume-cover') == None:
+        volume_cover = volume.find('li', class_='volume-cover').find('img')['data-src']
+      v_dict['cover'] = volume_cover
 
       # 提取卷中的章节链接和文本
-      chapters = volume.find_all('li', class_='col-4')
+      chapters = volume.find_all('li', class_='jsChapter')
       for chapter in chapters:
           link = chapter.find('a')['href']
           text = chapter.find('a').text
@@ -185,16 +200,24 @@ def catalog_parse(url):
   return volume_list
 
 if __name__=='__main__':
-  url = 'https://www.linovelib.com/novel/41/catalog'
+  url = 'https://www.bilinovel.com/novel/184/catalog'
   volume_list = catalog_parse(url)
-  start_with = 6
+  print(f'total {len(volume_list)}')
+  
+  dir_name = '空之境界'
+  author_name = '奈须蘑菇'
+  if not os.path.exists(dir_name):
+    os.mkdir(dir_name)
+
+  start_with = 1
   i = 1
   for volume in volume_list:
     if i < start_with:
       i = i + 1
       continue
     title = volume['title']
+    cover = volume['cover']
     chapters = volume['chapters']
     print(f'{title} was downloading...')
     print(chapters)
-    book_spider(title, chapters)
+    book_spider(title, chapters, dir_name, author_name, cover)

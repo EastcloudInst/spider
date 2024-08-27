@@ -17,7 +17,7 @@ if os.path.exists(sorted_json_file):
     for _, value in sorted_data.items():
         new_key = value.lower()[2:]
         if not new_key in decode_data:
-            user_input = input(f"{new_key}: ")
+            user_input = input(f"{new_key.upper()}: ")
             if user_input == 'qq':
                 break
             else:
