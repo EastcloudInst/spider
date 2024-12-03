@@ -5,7 +5,7 @@ import re
 # 导入json模块
 import json
 # TODO 记得更改你要的url和你自己的cookie
-url = 'https://www.bilibili.com/video/BV1ZH4y1V7AE/?spm_id_from=333.337.search-card.all.click'
+url = 'https://www.bilibili.com/video/BV1234y1F7ZZ/?spm_id_from=333.999.0.0'
 cookie = "_uuid=10324EDB8-BC6D-ACA10-7BF2-D51021F95AECF99733infoc; buvid3=6184A61E-F088-DB91-E65D-1BFD0088550998951infoc; b_nut=1714296999; buvid4=03465637-96B3-F0BF-A948-5A494EECA64698951-024042809-JP0MSJrfhvJN7G5Spv3VbkB4016Igw3BlDV3f1Zlpzg%3D; SESSDATA=f6092f37%2C1730001570%2C5dd65%2A42CjCXDGAxL0erDLmV8qAKWkB9uBNYHWeHAOVbtc8Gj1JPzOB-lY7E7pV9-FkyZV5eZewSVjE2X3ZHbHRjek5QZ1BDa3FSeUN1dU9oNWFvUlhGd2lUMFdSeXVKWkRKeldMN3ExTFU2MFFaeGNRMDdHcW1HMGszS0RWTVdMLXVQRGg4UkxVMEJuVS1RIIEC; bili_jct=cddbb22d1e9469a929cf9f72a1ea0d4b; DedeUserID=334717844; DedeUserID__ckMd5=fc36479a3a46f6aa; enable_web_push=DISABLE; header_theme_version=CLOSE; home_feed_column=5; CURRENT_FNVAL=4048; rpdid=0z9Zw2XKKu|5kY1LGIo|5ue|3w1S1OVF; PVID=1; CURRENT_QUALITY=116; buvid_fp_plain=undefined; fingerprint=8e98d5c44bba37fa89c535e13034ecae; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjEyODg4ODksImlhdCI6MTcyMTAyOTYyOSwicGx0IjotMX0.kdk_6aR6FCRJXbv1H0FK3T1M5ow-g0Cj8Do4zH7dGDs; bili_ticket_expires=1721288829; b_lsid=98D273BF_190B5659D65; bmg_af_switch=1; bmg_src_def_domain=i0.hdslb.com; sid=8rfuf63c; browser_resolution=1699-944; buvid_fp=1adad01b8b82fa1ed31de5a6ce9752ed; VIP_CONTENT_REMIND=1; bp_t_offset_334717844=954320284104523776"
 headers = {
         # Referer 防盗链 告诉服务器你请求链接是从哪里跳转过来的
@@ -32,11 +32,32 @@ print(video_url)
 # 提取音频链接
 audio_url = json_data['data']['dash']['audio'][0]['base_url']
 print(audio_url)
-video_content = requests.get(url=video_url, headers=headers).content
-# 获取音频内容
+
+
+print('get audio content...')
 audio_content = requests.get(url=audio_url, headers=headers).content
+
+print('get video content...')
+video_content = requests.get(url=video_url, headers=headers).content
+
 # 保存数据
 with open('video\\' + title + '.mp4', mode='wb') as v:
     v.write(video_content)
 with open('video\\' + title + '.mp3', mode='wb') as a:
     a.write(audio_content)
+
+
+
+from moviepy.editor import VideoFileClip, AudioFileClip
+
+# 加载视频文件
+video = VideoFileClip('video\\' + title + '.mp4')
+
+# 加载音频文件
+audio = AudioFileClip('video\\' + title + '.mp3')
+
+# 将音频添加到视频中
+video_with_audio = video.set_audio(audio)
+
+# 导出带音频的视频
+video_with_audio.write_videofile('video\\' + title + '_merge.mp4', codec="libx264", audio_codec="aac")
