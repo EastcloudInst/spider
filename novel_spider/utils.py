@@ -1,81 +1,98 @@
-import xml.etree.ElementTree as ET
+import requests
+import os
+from typing import Union
+from pathlib import Path
 from ebooklib import epub
-from six import b
-import ebooklib
 
-class myEpubHtml(epub.EpubHtml):
-    # _template_name = 'chapter'
+def get_html_content(book: str, vol: Union[str, int], chapter: Union[str, int], prefix='catalogs'):
+    if isinstance(vol, int):
+        vol = f'第{vol}卷'
+    if isinstance(chapter, int):
+        chapter = f'第{chapter}话.html'
+        
+    # 指定文件路径
+    file_path = os.path.join(prefix, book, vol, chapter)
+    print(file_path)
 
-    def __init__(self, uid=None, file_name='', media_type='', content=None, title='',
-                 lang=None, direction=None, media_overlay=None, media_duration=None):
-        super(myEpubHtml, self).__init__(uid, file_name, media_type, content)
+    try:
+        # 打开文件
+        with open(file_path, 'r', encoding='utf-8') as file:
+            # 读取整个文件内容
+            content = file.read()
+            # print(content)
+    except FileNotFoundError:
+        print(f"错误：文件 {file_path} 未找到，请检查路径是否正确。")
+    except IOError:
+        print(f"发生I/O错误，无法读取文件 {file_path}。")
 
-        self.title = title
-        self.lang = lang
-        self.direction = direction
+    return content
 
-        self.media_overlay = media_overlay
-        self.media_duration = media_duration
+def get_img(url):
+  # url = 'https://img3.readpai.com/0/41/117273/231236.jpg'
 
-        self.links = []
-        self.properties = []
-        self.pages = []
+  headers = {
+    "authority": "i.motiezw.com",
+    "method": "GET",
+    "path": "/0/1/2/30.jpg",
+    "scheme": "https",
+    "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "zh-CN,zh;q=0.9,en-GB;q=0.8,en-US;q=0.7,en;q=0.6",
+    "cache-control": "no-cache",
+    "pragma": "no-cache",
+    "priority": "i",
+    "referer": "https://www.bilimanga.net/",
+    "sec-ch-ua": "\"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "image",
+    "sec-fetch-mode": "no-cors",
+    "sec-fetch-site": "cross-site",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+  }
+
+  response = requests.get(url, headers=headers)
+  img_data = response.content
+  # if url.endswith('.avif'):
+  #   img_filename = 'image.avif'
+  #   # 保存图片到本地
+  #   with open(img_filename, 'wb') as img_file:
+  #       img_file.write(img_data)
+  print("download over")
+  
+  return img_data
+
+def find_html_files(directory):
+  # 创建一个Path对象
+  path = Path(directory)
+  html_files = [p.name for p in path.rglob("*.html")]
+  return html_files
+
+def get_start_end(x: Union[int, list]):
+    start = end = 0
+    if isinstance(x, int):
+        start = end = x
+    elif(x, list):
+        start = x[0]
+        end = x[1]
+    return start, end
+
+author_dict = {
+    '葬送的芙莉莲': '山田鐘人'
+}
+
+def create_ebook(title, book='unknown', author = None, cover = None):
+    # 创建电子书
+    ebook = epub.EpubBook()
+    ebook.set_title(title)
+    ebook.set_language('zh')
+
+    if not author:
+        author = author_dict.get(book, '佚名')
+    ebook.add_author(author)
+
+    if not cover == None:
+        book_cover = get_img(cover)
+        ebook.set_cover(f'{title}.jpg', book_cover)
     
-    def get_content(self, default=None):
-        return self.content
-
-    def get_body_content(self):
-        return self.content
-
-from fontTools.ttLib import woff2
-from fontTools.ttLib import TTFont
-import time
-
-def woff2ttf(input_path):
-    # 定义 WOFF2 文件和输出的 TTF 文件路径
-    input_woff2_file = input_path
-    output_ttf_file = 'read.ttf'
-
-    # 使用 fonttools 进行解压缩
-    woff2.decompress(input_woff2_file, output_ttf_file)
-
-    print(f'WOFF2 文件已转换为 TTF 文件: {output_ttf_file}')
-
-def show_ttf(ttf_path):
-    # 打开并读取 TTF 文件
-    font = TTFont(ttf_path)
-
-    # 打印基本的字体信息
-    print("Font family name:", font['name'].getName(1, 3, 1).toStr())
-    print("Font subfamily name:", font['name'].getName(2, 3, 1).toStr())
-
-    # 访问字符映射表 (CMap)
-    cmap = font['cmap'].getcmap(0, 0).cmap
-
-    # 打印所有的字符映射
-    print("\nCharacter Map (CMap):")
-    i = 0
-    for codepoint, name in cmap.items():
-        tmp = f'uni{codepoint:04x}'
-        # and f'{codepoint:04x}' == 'e721'
-        if not tmp == name and f'{codepoint:04x}' == 'e721':
-            print(f"U+{codepoint:04X}: {name}")
-            i = i + 1
-        if i == 50:
-            # time.sleep(1)
-            i = 0
-            
-    # 示例：查找特定字符的 Unicode 编码
-    glyph_name = 'c'
-    for codepoint, name in cmap.items():
-        if name == glyph_name:
-            print(f"\nThe character '{glyph_name}' is mapped to Unicode codepoint U+{codepoint:04X}")
-
-    # 关闭字体文件
-    font.close()
-
-if __name__=='__main__':
-   debug_path = 'spider/novel_spider/'
-   show_ttf('read.ttf')
-
-
+    return ebook

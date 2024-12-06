@@ -55,4 +55,8 @@ def get_img(url):
   return img_data
 
 
-get_img('https://i.motiezw.com/0/1/2/1.jpg')
+if __name__=='__main__':
+  # get_img('https://i.motiezw.com/0/1/31268/676330.avif')
+  s = '15'
+  print(s.split('-'))
+  print(list(range(1,3)))
